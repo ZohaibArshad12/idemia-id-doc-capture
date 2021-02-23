@@ -1,0 +1,603 @@
+<!--
+Copyright 2020 Idemia Identity & Security
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<!DOCTYPE html >
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Document autocapture detection</title>
+    <link rel="stylesheet" href="./css/bootstrap.min.css">
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="./favicons/logo-180.png">
+    <link rel="shortcut icon" href="./favicons/logo-16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="./favicons/logo-32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./favicons/logo-16.png">
+    <link rel="manifest" href="./favicons/manifest.json">
+    <link rel="mask-icon" href="./favicons/safari-pinned-tab.svg" color="#430099">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="WebSDK">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#430099"/>
+</head>
+<body>
+    <main class="container-fluid animation-tut">
+<!-- Browser compatibility Check-->
+        <div id="step-compatibility" class="row step d-none">
+            <header class="row header">
+                <div class="col logo">
+                    <img alt="Logo IDEMIA" src="./img/logo.png">
+                </div>
+            </header>
+            <div class="col-12 description">
+                Parece que está utilizando un navegador no compatible.
+            </div>
+            <div class="col-12 browsers-description">
+                <p>Utilice uno de los siguientes navegadores para una mejor experiencia</p>
+            </div>
+
+            <div class="col-12 browsers-content">
+
+                <div class="browsers os-list">
+                    <div class="browser">
+                        <div id="chrome" class="browser-img"></div><span>Google Chrome Version 66+</span>
+                    </div>
+                    <div  class="browser">
+                        <div id="firefox" class="browser-img"></div><span>Mozilla Firefox Version 52+</span>
+                    </div>
+                    <div class="browser">
+                        <div id="safari" class="browser-img"></div><span>Apple Safari Version 11.2+</span>
+                    </div>
+                    <div  class="browser">
+                        <div id="opera" class="browser-img"></div><span> Opera Version 55+</span>
+                    </div>
+                    <div  class="browser">
+                        <div id="edge" class="browser-img"></div><span> Microsoft Edge Version 17+</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Browser connectivity Check-->
+        <div id="step-weak-network" class="row step d-none">
+            <header class="row header">
+                <div class="col logo">
+                    <img alt="Logo IDEMIA" src="./img/logo.png">
+                </div>
+            </header>
+            <div class="col-12 animation">
+                <div class="loader-animation"><div></div></div>
+                <span class="description text-center">Comprobando la señal de la red</span>
+            </div>
+            <div class="check-phone">
+                <div class="">
+                    <img class="contain-gif" width="100" src="./img/wifi-weak.png" alt="Weak network signal">
+                </div>
+                <div class="text-center description">
+                    <span>Señal de red débil <span class="signal-value"></span></span>
+                    <small class="pt-2">
+                        <span class="download">Este proceso solo funciona con una velocidad de conexión de al menos</span>
+                        <span class="upload">Este proceso solo funciona con una velocidad de conexión de subida de al menos</span>
+                        <span class="signal-min-value"></span>.
+                        Parece que la señal de su red es demasiado débil.
+
+                    </small>
+                </div>
+                <div class="btn-footer w-100">
+                    <button class="btn btn-primary btn-block" id="check-network">vuelva a probar la conexión de red</button>
+                </div>
+            </div>
+        </div>
+        <!--displayed just before the livess start if no response from connectivity check-->
+        <div id="connectivity-check" class="row step d-none">
+            <header class="row header">
+                <div class="col logo">
+                    <img alt="Logo IDEMIA" src="./img/logo.png">
+                </div>
+            </header>
+            <div class="col-12 animation">
+                <div class="loader-animation"><div></div></div>
+                <span class="description text-center">Comprobando la señal de la red</span>
+            </div>
+        </div>
+        <div id="step-good-network" class="row step d-none">
+            <header class="row header">
+                <div class="col logo">
+                    <img alt="Logo IDEMIA" src="./img/logo.png">
+                </div>
+            </header>
+            <div class="check-phone">
+                <div class="">
+                    <img class="contain-gif" width="100" src="./img/wifi-medium.png" alt="Good network signal">
+                </div>
+                <div class="text-center description">
+                    <span>Buena señal de red <span class="signal-value"></span></span>
+                    <small class="pt-2">Este proceso solo funciona con una velocidad de conexión de al menos
+                        <span class="signal-min-value"></span>.
+                        así que asegúrese de mantener una buena conexión.
+                    </small>
+                </div>
+                <div class="btn-footer w-100">
+                    <button class="btn btn-primary btn-block" data-target="#step-country-selection">Estoy listo</button>
+                </div>
+            </div>
+        </div>
+<!--Tutorials start-->
+        <div id="step-start-tut" class="row step d-none">
+            <header class="row header">
+                <div class="col logo">
+                    <img alt="Logo IDEMIA" src="./img/logo.png">
+                    <span class="skip" data-target="#step-country-selection">OMITIR</span>
+                </div>
+            </header>
+            <div class="col-12 description">
+                <span>Primero, obtenga una identificación que tenga su foto.</span>
+                <small>Puede ser una licencia de conducir, una tarjeta de identificación estatal, un permiso de aprendizaje o un pasaporte.</small>
+            </div>
+            <div class="col-12 animation">
+                <div class="doc-auth-anim-start contain"></div>
+                <div class="col-12 footer">
+                    <div class="row">
+                        <div class="col">
+                            <button class="btn btn-primary btn-block" data-target="#step-country-selection" data-delay>tengo uno</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+<!-- Country & doc type selection -->
+        <div id="step-country-selection" class="row step ">
+            <header class="row header">
+                <div class="col logo">
+                    <img alt="Logo IDEMIA" src="./img/logo.png">
+                </div>
+            </header>
+            <div class="col-12 description">
+                <span>¿De qué país es la identificación?</span>
+            </div>
+            <div class="col-12 animation flex-column">
+                    <div class="row">
+                        <div class="col-12">
+                            <input type="text" id="country-search-bar" placeholder="Search for country" title="select a country">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <ul id="countries">
+                                <li class="country-header">Países buscados con frecuencia</li>
+                            </ul>
+                        </div>
+                    </div>
+            </div>
+        </div>
+        <div id="step-doctype-selection" class="row step d-none">
+            <header class="row header">
+                <div class="col logo">
+                    <img alt="Logo IDEMIA" src="./img/logo.png">
+                </div>
+            </header>
+            <div class="col-12 description">
+                <span>Que tipo de <span id="selected-country"></span> documento es?</span>
+            </div>
+            <div class="col-12 animation flex-column justify-content-start"></div>
+        </div>
+<!-- GENERIC DOC -->
+        <div id="step-scan-doc-unknown" class="row step d-none">
+            <header class="row header">
+                <div class="col logo">
+                    <img alt="Logo IDEMIA" src="./img/logo.png">
+                </div>
+            </header>
+            <div class="col-12 description">
+                <span>Escanee su documento.</span>
+                <small>Asegúrese de que su identificación esté centrada en el marco. Limpie la cámara de su dispositivo si está sucia.</small>
+            </div>
+            <div class="col-12 animation">
+                <div class="doc-scan-back-doc contain"></div>
+                <div class="col-12 footer">
+                    <div class="row">
+                        <div class="col">
+                            <button class="btn btn-primary btn-block"
+                                    data-target="#step-doc-auth" data-doc-type="UNKNOWN">Seguir</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="step-scan-doc-unknown-result" class="row step d-none">
+            <header class="row header">
+                <div class="col logo">
+                    <img alt="Logo IDEMIA" src="./img/logo.png">
+                </div>
+            </header>
+            <div class="col-12 description">
+                <span>Extrajimos información de su documento.</span>
+                <small>Si algo es incorrecto, por favor vuelva a tomar una foto del reverso de su identificación.</small>
+            </div>
+            <div class="col-12 animation justify-content-start">
+                <div class="formatted-results">
+                    <div class="result-block">
+                        <div class="result-header">Nombre de pila</div>
+                        <div class="result-value">Miguel</div>
+                    </div>
+                    <div class="result-block">
+                        <div class="result-header">Apellido</div>
+                        <div class="result-value">Daniel</div>
+                    </div>
+                    <div class="result-block">
+                        <div class="result-header">DOB</div>
+                        <div class="result-value">03/07/1975</div>
+                    </div>
+                    <div class="result-block">
+                        <div class="result-header">Adresse</div>
+                        <div class="result-value">62 Cottonwood Rd, Ciudad cualquiera, MA</div>
+                    </div>
+                </div>
+                <div class="col-12 footer">
+                    <div class="row">
+                        <div class="col-12">
+                            <button class="btn btn-primary btn-block" data-target="#step-country-selection" data-delay>Reiniciar la demostración</button>
+                        </div>
+                        <div class="col-12 pt-3">
+                            <button class="btn btn-outline-primary btn-block"
+                                    data-doc-type="UNKNOWN" data-target="#step-doc-auth">es incorrecto, vuelva a escanear el documento</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="step-scan-doc-unknown-error" class="row step d-none">
+            <header class="row header">
+                <div class="col logo">
+                    <img alt="Logo IDEMIA" src="./img/logo.png">
+                </div>
+            </header>
+            <div class="col-12 description">
+                <span>Tuvimos algunas dificultades para capturar su documento. Asegúrese de que todas las esquinas estén visibles.</span>
+                <small class="pc-text-left text-center pt-5">Foto de ejemplo</small>
+            </div>
+            <div class="col-12 animation">
+                <img class="contain-gif" src="./img/doc-check-back-doc-sample.gif" alt="Computer flat on a table">
+                <div class="col-12 footer">
+                    <div class="row">
+                        <div class="col">
+                            <button class="btn btn-outline-primary btn-block"
+                                    data-doc-type="UNKNOWN" data-target="#step-doc-auth">Vuelve a intentarlo</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+<!-- BACK SIDE -->
+        <div id="step-scan-doc-back" class="row step d-none">
+            <header class="row header">
+                <div class="col logo">
+                    <img alt="Logo IDEMIA" src="./img/logo.png">
+                </div>
+            </header>
+            <div class="col-12 description">
+                <span>Escanea la parte de atrás de tu <span class="document-name"></span>.</span>
+                <small>
+                    Asegúrese de que su identificación esté centrada en el marco.
+                    <span class="doc-rule"> y eso <span class="doc-rule-value"></span> claramente visible.</span> <br>
+                    Limpie la cámara de su dispositivo si está sucia.
+                </small>
+            </div>
+            <div class="col-12 animation">
+                <div class="doc-scan-back-doc contain"></div>
+                <div class="col-12 footer">
+                    <div class="row">
+                        <div class="col">
+                            <button class="btn btn-primary btn-block"
+                                    data-target="#step-doc-auth" data-doc-type="BACK">Seguir</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="step-scan-doc-back-result" class="row step d-none">
+            <header class="row header">
+                <div class="col logo">
+                    <img alt="Logo IDEMIA" src="./img/logo.png">
+                </div>
+            </header>
+            <div class="col-12 description">
+                <span>Extrajimos información de
+                    <span class="doc-rule">
+                        los <span class="doc-rule-value"> en </span>
+                    </span>
+                    tu <span class="document-name"></span>.
+                </span>
+                <small>Si algo es incorrecto, vuelva a tomar una foto del reverso de su identificación.</small>
+            </div>
+            <div class="col-12 animation justify-content-start">
+                <div class="formatted-results"></div>
+                <div class="col-12 footer">
+                    <div class="row">
+                        <div class="col-12">
+                            <button class="d-none btn btn-primary btn-block restart-demo" data-target="#step-country-selection" data-delay>Reiniciar la demostración</button>
+                            <button class="d-none btn btn-primary btn-block continue-demo" data-target="#step-scan-doc-front" data-delay>se ve bien, continúe</button>
+                        </div>
+                        <div class="col-12 pt-3">
+                            <button class="btn btn-outline-primary btn-block"
+                                    data-doc-type="BACK" data-target="#step-doc-auth">es incorrecto, vuelva a escanear el documento</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="step-scan-doc-back-error" class="row step d-none">
+            <header class="row header">
+                <div class="col logo">
+                    <img alt="Logo IDEMIA" src="./img/logo.png">
+                </div>
+            </header>
+            <div class="col-12 description">
+                <span>Tuvimos algunas dificultades para capturar su documento, asegúrese de que todas las esquinas sean visibles como en el ejemplo siguiente</span>
+                <small class="pc-text-left text-center pt-5">Example photo</small>
+            </div>
+            <div class="col-12 animation">
+                <img class="contain-gif" src="./img/doc-check-back-doc-sample.gif" alt="Computer flat on a table">
+                <div class="col-12 footer">
+                    <div class="row">
+                        <div class="col">
+                            <button class="btn btn-primary btn-block"
+                                    data-doc-type="BACK" data-target="#step-doc-auth">Vuelve a intentarlo</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+<!-- FRONT SIDE -->
+        <div id="step-scan-doc-front" class="row step d-none">
+            <header class="row header">
+                <div class="col logo">
+                    <img alt="Logo IDEMIA" src="./img/logo.png">
+                </div>
+            </header>
+            <div class="col-12 description">
+                <span>Escanee el frente de su <span class="document-name"></span>.</span>
+                <small>
+                    Asegúrese de que su identificación esté centrada en el marco.
+                    <span class="doc-rule"> y eso <span class="doc-rule-value"></span> claramente visible.</span> <br>
+                    Limpie la cámara de su dispositivo si está sucia.
+                </small>
+            </div>
+            <div class="col-12 animation">
+                <div class="doc-scan-front-doc contain"></div>
+                <div class="col-12 footer">
+                    <div class="row">
+                        <div class="col">
+                            <button class="btn btn-primary btn-block"
+                                    data-target="#step-doc-auth" data-doc-type="FRONT" >Seguir</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="step-scan-doc-front-result" class="row step d-none">
+            <header class="row header">
+                <div class="col logo">
+                    <img alt="Logo IDEMIA" src="./img/logo.png">
+                </div>
+            </header>
+            <div class="col-12 description">
+                <span>Extrajimos información del frente de su <span class="document-name"></span>.</span>
+                <small>Si algo es incorrecto, por favor vuelva a tomar una foto de su identificación.</small>
+            </div>
+            <div class="col-12 animation">
+                <div class="formatted-results justify-content-start"><!-- results here --></div>
+                <div class="col-12 footer">
+                    <div class="row">
+                        <div class="col-12">
+                            <button class="d-none btn btn-primary btn-block restart-demo" data-target="#step-country-selection" data-delay>Reiniciar la demostración</button>
+                            <button class="d-none btn btn-primary btn-block continue-demo" data-target="#step-scan-doc-back" data-delay>se ve bien, continúe</button>
+                        </div>
+                        <div class="col-12 pt-3">
+                            <button class="btn btn-outline-primary btn-block"
+                                    data-doc-type="FRONT" data-target="#step-doc-auth">es incorrecto, vuelva a escanear el documento</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="step-scan-doc-front-error" class="row step d-none">
+            <header class="row header">
+                <div class="col logo">
+                    <img alt="Logo IDEMIA" src="./img/logo.png">
+                </div>
+            </header>
+            <div class="col-12 description">
+                <span>Tuvimos algunas dificultades para capturar su documento, asegúrese de que todas las esquinas sean visibles como en el ejemplo siguiente</span>
+                <small class="pc-text-left text-center pt-5">Foto de ejemplo</small>
+            </div>
+            <div class="col-12 animation">
+                <img class="contain-gif" src="./img/doc-check-front-doc-sample.gif" alt="Check ID">
+                <div class="col-12 footer">
+                    <div class="row">
+                        <div class="col">
+                            <button class="btn btn-primary btn-block"
+                                    data-doc-type="FRONT" data-target="#step-doc-auth">Vuelve a intentarlo</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+<!-- PASSPORT INSIDE PAGE -->
+        <div id="step-scan-passport" class="row step d-none">
+            <header class="row header">
+                <div class="col logo">
+                    <img alt="Logo IDEMIA" src="./img/logo.png">
+                </div>
+            </header>
+            <div class="col-12 description">
+                <span>Escanee la página interior de su pasaporte.</span>
+                <small>
+                    Mientras sostiene el pasaporte con una mano, asegúrese de que la información de la parte inferior y su foto sean claramente visibles. Limpie la cámara de su teléfono si está sucia.
+                </small>
+            </div>
+            <div class="col-12 animation">
+                <div class="doc-scan-passport contain"></div>
+                <div class="col-12 footer">
+                    <div class="row">
+                        <div class="col">
+                            <button class="btn btn-primary btn-block"
+                                    data-target="#step-doc-auth" data-doc-type="INSIDE_PAGE" >Seguir</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="step-scan-passport-result" class="row step d-none">
+            <header class="row header">
+                <div class="col logo">
+                    <img alt="Logo IDEMIA" src="./img/logo.png">
+                </div>
+            </header>
+            <div class="col-12 description">
+                <span>Extrajimos información de la página interior de su pasaporte.</span>
+                <small>Si algo es incorrecto, vuelva a escanear su documento.</small>
+            </div>
+            <div class="col-12 animation justify-content-start">
+                <div class="formatted-results"><!-- results here --></div>
+                <div class="col-12 footer">
+                    <div class="row">
+                        <div class="col-12">
+                            <button class="d-none btn btn-primary btn-block restart-demo" data-target="#step-country-selection" data-delay>Reiniciar la demostración</button>
+                            <button class="d-none btn btn-primary btn-block continue-demo" data-target="#step-scan-doc-back" data-delay>se ve bien, continúe</button>
+                        </div>
+                        <div class="col-12 pt-3">
+                            <button class="btn btn-outline-primary btn-block"
+                                    data-doc-type="INSIDE_PAGE" data-target="#step-doc-auth">es incorrecto, vuelva a escanear el documento</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="step-scan-passport-error" class="row step d-none">
+            <header class="row header">
+                <div class="col logo">
+                    <img alt="Logo IDEMIA" src="./img/logo.png">
+                </div>
+            </header>
+            <div class="col-12 description">
+                <span>Tuvimos algunas dificultades para capturar su documento, asegúrese de que todas las esquinas sean visibles como en el ejemplo siguiente</span>
+                <small class="pc-text-left text-center pt-5">Foto de ejemplo</small>
+            </div>
+            <div class="col-12 animation">
+                <img class="contain-gif" src="./img/doc-check-passport-sample.gif" alt="Check ID">
+                <div class="col-12 footer">
+                    <div class="row">
+                        <div class="col">
+                            <button class="btn btn-primary btn-block"
+                                    data-doc-type="INSIDE_PAGE" data-target="#step-doc-auth">Vuelve a intentarlo</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+<!-- Document Capture-->
+        <div id="step-access-permission" class="row step d-none">
+            <header class="row header">
+                <div class="col logo">
+                    <img alt="Logo IDEMIA" src="./img/logo.png">
+                </div>
+            </header>
+            <div class="check-phone">
+                <div class="">
+                    <img class="contain-gif" src="./img/phone-check_2x.png" alt="Check phone">
+                </div>
+                <div class="text-center description">
+                    <span>Para autenticar su documento, necesitamos acceso a la cámara de su teléfono. ¿Suena bien?</span>
+                </div>
+                <div class="btn-footer w-100">
+                    <button class="btn btn-primary btn-block" data-target="#connectivity-check">acepto</button>
+                </div>
+            </div>
+        </div>
+        <div id="step-doc-auth" class="row step d-none">
+            <div class="col-12 animation">
+                <video id="user-video" class="w-100 h-100" autoplay playsinline></video>
+                <div id="doc-auth-mask" class="rotatable-wh doc-auth-mask w-100 h-100 d-flex">
+                    <div class="doc-auth-mask-border d-flex"></div>
+                </div>
+                <div id="align-doc-msg" class="rotatable-wh d-none-fadeout video-overlay w-100 h-100 d-flex">
+                    <span class="d-none video-msg video-msg-unknown align-self-center">Alinear ID en marco</span>
+                    <span class="d-none video-msg video-msg-inside-page align-self-center">Alinear la página interior de la identificación en el marco</span>
+                    <span class="d-none video-msg video-msg-front align-self-center">Alinear el frente de la identificación en el marco</span>
+                    <span class="d-none video-msg video-msg-back align-self-center">Alinear la parte posterior de la identificación en el marco</span>
+                </div>
+                <div id="blurry-doc-msg" class="rotatable-wh d-none-fadeout video-overlay w-100 h-100 d-flex">
+                    <span class="video-msg align-self-center">No mueva su documento</span>
+                </div>
+                <div id="scanning-doc-msg" class="rotatable-wh d-none-fadeout video-overlay w-100 h-100 d-flex flex-column">
+                    <div class="loader-animation loader-animation-authent align-self-center mb-3"><div></div></div>
+                    <span class="video-msg align-self-center">Escaneado de documento en curso</span>
+                </div>
+                <div id="hold-straight-msg" class="rotatable-wh d-none-fadeout video-overlay w-100 h-100 d-flex">
+                    <span class="video-msg align-self-center">Mantenga su documento derecho</span>
+                </div>
+                <div id="doc-low-light-msg" class="rotatable-wh d-none-fadeout video-overlay w-100 h-100 d-flex">
+                    <span class="video-msg align-self-center">Se detectó poca luz</span>
+                </div>
+                <div id="doc-reflection-msg" class="rotatable-wh d-none-fadeout video-overlay w-100 h-100 d-flex">
+                    <span class="video-msg align-self-center">Reflexión detectada en el documento</span>
+                </div>
+                <div id="too-close-doc-msg" class="rotatable-wh d-none-fadeout video-overlay w-100 h-100 d-flex">
+                    <span class="video-msg align-self-center">Aleje su documento</span>
+                </div>
+                <div id="too-far-doc-msg" class="rotatable-wh d-none-fadeout video-overlay w-100 h-100 d-flex">
+                    <span class="video-msg align-self-center">Acerque el documento</span>
+                </div>
+                <div id="doc-captured" class="d-none-fadeout video-overlay w-100 h-100 d-flex">
+                    <svg class="doc-captured-border">
+                        <polygon points="0,0" stroke="#ac85df" fill="rgba(67, 0, 153, 0.5)" stroke-linejoin="round" stroke-width="5"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+<!-- Loading Results -->
+        <div id="loading-doc-results" class="loading row step d-none">
+            <div class="col-12 animation">
+                <div class="loader-animation loader-animation-authent"><div></div></div>
+                <span class="description text-center">Autenticando…
+                    <small class="text-center">Verificando su documento enviado</small>
+                </span>
+            </div>
+        </div>
+<!-- Technical issue -->
+        <div id="step-doc-auth-ko" class="row step d-none results">
+            <div class="col-12 animation">
+                <img src="./img/failure.svg" alt="failure">
+                <span class="description text-center">Lo siento, hubo un problema.</span>
+                <span class="description"><small class="text-center"></small></span>
+                <button class="btn btn-primary reset-animations" data-target="#step-country-selection">Reiniciar la demostración</button>
+            </div>
+        </div>
+        <div id="step-doc-auth-tehnical-ko" class="row step d-none results">
+            <div class="col-12 animation">
+                <img src="./img/failure.svg" alt="failure">
+                <span class="description text-center">Lo siento, hubo un problema.</span>
+                <span class="description"><small class="text-center"></small></span>
+            </div>
+        </div>
+    </main>
+    <script src="https://developer.430099.net:443/doc-server/docserver-environment-api.js"></script>
+    <script src="./js/detect-env.js"></script>
+    <script src="https://developer.430099.net:443/doc-server/docserver-video-api.js"></script>
+    <script src="https://developer.430099.net:443/doc-server/docserver-network-check.js"></script>
+    <script src="./js/index.js"></script>
+</body>
+</html>
