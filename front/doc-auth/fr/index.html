@@ -130,18 +130,60 @@ limitations under the License.
                     </small>
                 </div>
                 <div class="btn-footer w-100">
-                    <button class="btn btn-primary btn-block" data-target="#step-country-selection">je suis prêt</button>
+                    <button class="btn btn-primary btn-block" data-target="#step-start-tut">je suis prêt</button>
                 </div>
             </div>
         </div>
-<!--Tutorials start-->
-        <div id="step-start-tut" class="row step d-none">
-            <header class="row header">
-                <div class="col logo">
-                    <img alt="Logo IDEMIA" src="./img/logo.png">
-                    <span class="skip" data-target="#step-country-selection">SAUTER</span>
+
+        <!-- header -->
+
+        <header class="row header">
+
+            <div class="col-4 go-back d-none" id="header-go-back">
+                <button class="btn btn-secondary btn-block" id="go-back-from-doc-type" data-delay>GO BACK</button>
+            </div>
+            <div class="col-4 logo" id="header-logo" >
+                <img alt="Logo IDEMIA" src="./img/idv-logo.svg">
+            </div>
+            <div class="col-8 info" id="header-info-secure-section">
+                <img alt="Logo IDEMIA" src="./img/lock-small.svg">
+                <span  >Vos informations sont sécurisées.</span>
+            </div>
+            <div class="col-8 steps d-none" id="header-steps-section">
+                <div class="header-step-completed" id='header-step1' >
+                    <img alt="step done" src="./img/green-tick.svg">
                 </div>
-            </header>
+                <span class="header-hr"></span>
+                <div class="header-step active-step" id='header-step2'>
+                    <span>2</span>
+                </div>
+                <span class="header-hr"></span>
+                <div class="header-step" id='header-step3' class="d-none">
+                    <span>3</span>
+                </div>
+            </div>
+        </header>
+        <div id="permssion-modal" class="d-none step permission-modal-step" >
+        <div class="m-backdrop" ></div>
+        <div class="m-modal" id="camera-permission-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="m-dialog">
+              <div class="m-content">
+                <div class="m-body">
+                  <span class="m-heading"> ID&V needs access to your camera to perform this task  </span> </br>
+                  <span class="m-description" > Once the task is over, your phone's camera will no longer be turned on, and your data will be wiped. </span>
+
+                </div>
+                <div class="m-footer">
+                  <button type="button" id="camera-permission-not-allow" class="btn" data-target="#step-scan-doc-front" >Don't Allow</button>
+                  <button type="button" id="camera-permission-allow" class="btn"  data-target="#connectivity-check">Allow</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+<!--Tutorials start-->
+        <div id="step-start-tut" class="row step">
             <div class="col-12 description">
                 <span>Tout d'abord, obtenez une pièce d'identité avec votre photo.</span>
                 <small>Il peut s’agir d’un permis de conduire, d’une carte d’identité nationale, d’un permis d’étudiant ou d’un passeport.</small>
@@ -151,14 +193,14 @@ limitations under the License.
                 <div class="col-12 footer">
                     <div class="row">
                         <div class="col">
-                            <button class="btn btn-primary btn-block" data-target="#step-country-selection" data-delay>j'en ai un</button>
+                            <button class="btn btn-primary btn-block" id="show-doc-type" data-delay>j'en ai un</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 <!-- Country & doc type selection -->
-        <div id="step-country-selection" class="row step ">
+        <div id="step-country-selection" class="row step d-none">
             <header class="row header">
                 <div class="col logo">
                     <img alt="Logo IDEMIA" src="./img/logo.png">
@@ -183,11 +225,6 @@ limitations under the License.
             </div>
         </div>
         <div id="step-doctype-selection" class="row step d-none">
-            <header class="row header">
-                <div class="col logo">
-                    <img alt="Logo IDEMIA" src="./img/logo.png">
-                </div>
-            </header>
             <div class="col-12 description">
                 <span>Quel type de <span id="selected-country"></span> le document est-il?</span>
             </div>
@@ -248,7 +285,7 @@ limitations under the License.
                 <div class="col-12 footer">
                     <div class="row">
                         <div class="col-12">
-                            <button class="btn btn-primary btn-block" data-target="#step-country-selection" data-delay>Redémarrer la démo</button>
+                            <button class="btn btn-primary btn-block" data-target="#step-start-tut" data-delay>Redémarrer la démo</button>
                         </div>
                         <div class="col-12 pt-3">
                             <button class="btn btn-outline-primary btn-block"
@@ -327,7 +364,7 @@ limitations under the License.
                 <div class="col-12 footer">
                     <div class="row">
                         <div class="col-12">
-                            <button class="d-none btn btn-primary btn-block restart-demo" data-target="#step-country-selection" data-delay>Redémarrer la démo</button>
+                            <button class="d-none btn btn-primary btn-block restart-demo" data-target="#step-start-tut" data-delay>Redémarrer la démo</button>
                             <button class="d-none btn btn-primary btn-block continue-demo" data-target="#step-scan-doc-front" data-delay>ça a l'air bien, continuez</button>
                         </div>
                         <div class="col-12 pt-3">
@@ -361,12 +398,26 @@ limitations under the License.
             </div>
         </div>
 <!-- FRONT SIDE -->
-        <div id="step-scan-doc-front" class="row step d-none">
-            <header class="row header">
-                <div class="col logo">
-                    <img alt="Logo IDEMIA" src="./img/logo.png">
+        <div id="step-place-doc-in-palm" class="row step d-none">
+            <div class="col-12 description">
+                <span>Place your <span class="document-name"></span> in the palm of your hand.</span>
+                <small>
+                    Make sure you’re in a well-lit space and that there’s no glare on the ID.
+                </small>
+            </div>
+            <div class="col-12 animation">
+                <div class="doc-scan-front-doc contain"></div>
+                <div class="col-12 footer">
+                    <div class="row">
+                        <div class="col">
+                            <button class="btn btn-primary btn-block"
+                                    data-target="#step-scan-doc-front" data-doc-type="FRONT" >Continuer</button>
+                        </div>
+                    </div>
                 </div>
-            </header>
+            </div>
+        </div>
+        <div id="step-scan-doc-front" class="row step d-none">
             <div class="col-12 description">
                 <span>Scannez l'avant de votre <span class="document-name"></span>.</span>
                 <small>
@@ -402,7 +453,7 @@ limitations under the License.
                 <div class="col-12 footer">
                     <div class="row">
                         <div class="col-12">
-                            <button class="d-none btn btn-primary btn-block restart-demo" data-target="#step-country-selection" data-delay>Redémarrer la démo</button>
+                            <button class="d-none btn btn-primary btn-block restart-demo" data-target="#step-start-tut" data-delay>Redémarrer la démo</button>
                             <button class="d-none btn btn-primary btn-block continue-demo" data-target="#step-scan-doc-back" data-delay>ça a l'air bien, continuez</button>
                         </div>
                         <div class="col-12 pt-3">
@@ -475,7 +526,7 @@ limitations under the License.
                 <div class="col-12 footer">
                     <div class="row">
                         <div class="col-12">
-                            <button class="d-none btn btn-primary btn-block restart-demo" data-target="#step-country-selection" data-delay>Redémarrer la démo</button>
+                            <button class="d-none btn btn-primary btn-block restart-demo" data-target="#step-start-tut" data-delay>Redémarrer la démo</button>
                             <button class="d-none btn btn-primary btn-block continue-demo" data-target="#step-scan-doc-back" data-delay>ça a l'air bien, continuez</button>
                         </div>
                         <div class="col-12 pt-3">
@@ -510,11 +561,7 @@ limitations under the License.
         </div>
 <!-- Document Capture-->
         <div id="step-access-permission" class="row step d-none">
-            <header class="row header">
-                <div class="col logo">
-                    <img alt="Logo IDEMIA" src="./img/logo.png">
-                </div>
-            </header>
+           
             <div class="check-phone">
                 <div class="">
                     <img class="contain-gif" src="./img/phone-check_2x.png" alt="Check phone">
@@ -527,11 +574,12 @@ limitations under the License.
                 </div>
             </div>
         </div>
+       
         <div id="step-doc-auth" class="row step d-none">
             <div class="col-12 animation">
                 <video id="user-video" class="w-100 h-100" autoplay playsinline></video>
                 <div id="doc-auth-mask" class="rotatable-wh doc-auth-mask w-100 h-100 d-flex">
-                    <div class="doc-auth-mask-border d-flex"></div>
+                    <img src="./img/doc-cap-overlay.svg" alt="failure">
                 </div>
                 <div id="align-doc-msg" class="rotatable-wh d-none-fadeout video-overlay w-100 h-100 d-flex">
                     <span class="d-none video-msg video-msg-unknown align-self-center">Aligner la pièce d'identité dans le cadre</span>
@@ -583,7 +631,7 @@ limitations under the License.
                 <img src="./img/failure.svg" alt="failure">
                 <span class="description text-center">Désolé, un problème est survenu.</span>
                 <span class="description"><small class="text-center"></small></span>
-                <button class="btn btn-primary reset-animations" data-target="#step-country-selection">Redémarrer la démo</button>
+                <button class="btn btn-primary reset-animations" data-target="#step-start-tut">Redémarrer la démo</button>
             </div>
         </div>
         <div id="step-doc-auth-tehnical-ko" class="row step d-none results">

@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="534" height="338" viewBox="0 0 534 338">
+    <defs>
+        <linearGradient id="m0d2wtny4b" x1="-17.886%" x2="116.414%" y1="50%" y2="50%">
+            <stop offset="0%" stop-color="#FFF" stop-opacity=".5"/>
+            <stop offset="50.708%" stop-color="#45049A"/>
+            <stop offset="100%" stop-color="#FFF" stop-opacity=".5"/>
+        </linearGradient>
+        <filter id="5fw03lpddc" width="106.5%" height="150.3%" x="-3.2%" y="-25.2%" filterUnits="objectBoundingBox">
+            <feOffset in="SourceAlpha" result="shadowOffsetOuter1"/>
+            <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="4"/>
+            <feColorMatrix in="shadowBlurOuter1" values="0 0 0 0 0.262745098 0 0 0 0 0 0 0 0 0 0.6 0 0 0 0.5 0"/>
+        </filter>
+        <path id="f3fhgd0vza" d="M16.688 8.926c-4.28 0-7.748 3.464-7.748 7.736v304.676c0 4.272 3.469 7.736 7.748 7.736h500.625c4.278 0 7.747-3.464 7.747-7.736V16.662c0-4.272-3.469-7.736-7.747-7.736H16.688zm0-8.33h500.625c8.887 0 16.091 7.192 16.091 16.066v304.676c0 8.874-7.204 16.067-16.091 16.067H16.688c-8.888 0-16.092-7.193-16.092-16.067V16.662C.596 7.788 7.8.595 16.687.595z"/>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+        <g>
+            <g>
+                <path fill="#430099" d="M515.435 5.058c6.07 0 10.99 5.478 10.99 12.228v304.023c0 6.753-4.916 12.228-10.99 12.228H17.718c-6.07 0-10.99-5.478-10.99-12.228V17.286c0-6.753 4.915-12.228 10.99-12.228h497.717z" opacity=".3" transform="translate(-66 -25) translate(66 25)"/>
+                <g fill-rule="nonzero" transform="translate(-66 -25) translate(66 25)">
+                    <use fill="#430099" xlink:href="#f3fhgd0vza"/>
+                    <use fill="url(#m0d2wtny4b)" xlink:href="#f3fhgd0vza"/>
+                </g>
+                <g fill="#FFF" transform="translate(-66 -25) translate(66 25)">
+                    <use filter="url(#5fw03lpddc)" xlink:href="#k7l7s2nrrd"/>
+                    <use xlink:href="#k7l7s2nrrd"/>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

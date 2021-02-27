@@ -166,8 +166,40 @@ limitations under the License.
 
 const { $, $$, DOC_TYPE, getRulesInText, getNormalizedString, snakeCaseToTitleCase, snakeCaseToKebabCase } = __webpack_require__(/*! ../../utils/commons */ "../front/utils/commons.js");
 const { Allcountries } = __webpack_require__(/*! ../../../server/config/countries */ "./config/countries.js");
-
 const countrySelectionElement = $('ul#countries');
+const showDocTypeBtn = $('#show-doc-type')
+const goBackFromDocType = $('#go-back-from-doc-type')
+
+const HEADER_LOGO_ID = '#header-logo';
+const HEADER_GO_BACK_ID = '#header-go-back';
+const HEADER_INFO_SECURE_SECTION_ID =   '#header-info-secure-section';
+const HEADER_STEPS_SECTION_ID =   '#header-steps-section';
+
+const COUNTRY_CODE = 'USA';
+// Doc types to show
+const DOC_TYPE_TO_SHOW = [
+  "DRIVING_LICENSE",
+  "ID_CARD",
+  "RESIDENT_CARD",
+  "PASSPORT"
+]
+
+// Show DocTypes List
+showDocTypeBtn.addEventListener('click', async e => {
+  displayListOfDocumentTypes(COUNTRY_CODE, DOC_TYPE_TO_SHOW);
+});
+
+goBackFromDocType.addEventListener('click', async e => {
+  $('#step-start-tut').classList.remove('d-none');
+  $('#step-doctype-selection').classList.add('d-none');
+});
+
+// Show DocTypes List
+showDocTypeBtn.addEventListener('click', async e => {
+  $('#step-country-selection').classList.add('d-none');
+    $('#step-start-tut').classList.add('d-none');
+    $('#step-doctype-selection').classList.remove('d-none');
+});
 
 const allCountries = Allcountries // reorder the list of countries alphabetically (taking into account accent chars)
   .sort((a, b) => {
@@ -179,100 +211,104 @@ let currentSession; // strore current ession
 
 // Start of the process, loading supported countries  + doucment types from docserver
 // In addition predefined capture rules (store on SP server)  are also loaded in the "other country" part
-retrieveCountryDocTypes().then(function (res) {
-  const supportedCountriesDoctypes = res;
-  // Map supported countries with  SP  all countries (and identify most frequently used countries)
-  const acceptedCountries = res
-    .map(c => {
-      const country = allCountries.find(country => country.code === c.code);
-      if (!country) {
-        console.log('Unsupported country details', c.code);
-      }
-      return country;
-    })
-    .filter(c => c)
-    .sort((a, b) => {
-      return getNormalizedString(a.name).localeCompare(getNormalizedString(b.name));
-    });
 
-  // init countries screen with the list
-  // most frequently used countries first
-  const frequentCountries = acceptedCountries
-    .filter(c => c.frequent)
-    .map(c => {
-      return `<li class="country-frequent">
-                    <a href="#" data-code="${c.code}">${c.name}</a>
-              </li>`;
-    });
+// Country selection not needed for now
+// retrieveCountryDocTypes().then(function (res) {
+//   console.log('doctypes:::', res);
+//   const supportedCountriesDoctypes = res;
+//   // Map supported countries with  SP  all countries (and identify most frequently used countries)
+//   const acceptedCountries = res
+//     .map(c => {
+//       const country = allCountries.find(country => country.code === c.code);
+//       if (!country) {
+//         console.log('Unsupported country details', c.code);
+//       }
+//       return country;
+//     })
+//     .filter(c => c)
+//     .sort((a, b) => {
+//       return getNormalizedString(a.name).localeCompare(getNormalizedString(b.name));
+//     });
 
-  // group other countries by their first letter (taking into account accent chars)
-  let lastDisplayedLetter = '';
-  const otherCountries = acceptedCountries
-    .filter(c => !c.frequent)
-    .map(c => {
-      let countryLetterHeaderElement = '';
-      const firstLetterOfCurrentCountry = getNormalizedString(c.name.charAt(0));
-      if (lastDisplayedLetter !== firstLetterOfCurrentCountry) {
-        lastDisplayedLetter = firstLetterOfCurrentCountry;
-        countryLetterHeaderElement = `<li class="country-header">
-                                        ${firstLetterOfCurrentCountry.toUpperCase()}
-                                      </li>`;
-      }
-      return countryLetterHeaderElement +
-        `<li>
-          <a href="#" data-code="${c.code}" class="${countryLetterHeaderElement ? 'no-borders' : ''}">${c.name}</a>
-        </li>`;
-    });
+//   // init countries screen with the list
+//   // most frequently used countries first
+//   const frequentCountries = acceptedCountries
+//     .filter(c => c.frequent)
+//     .map(c => {
+//       return `<li class="country-frequent">
+//                     <a href="#" data-code="${c.code}">${c.name}</a>
+//               </li>`;
+//     });
 
-  // Display country collection on html page
-  countrySelectionElement.innerHTML += frequentCountries.join('') +
-    otherCountries.join('');
+//   // group other countries by their first letter (taking into account accent chars)
+//   let lastDisplayedLetter = '';
+//   const otherCountries = acceptedCountries
+//     .filter(c => !c.frequent)
+//     .map(c => {
+//       let countryLetterHeaderElement = '';
+//       const firstLetterOfCurrentCountry = getNormalizedString(c.name.charAt(0));
+//       if (lastDisplayedLetter !== firstLetterOfCurrentCountry) {
+//         lastDisplayedLetter = firstLetterOfCurrentCountry;
+//         countryLetterHeaderElement = `<li class="country-header">
+//                                         ${firstLetterOfCurrentCountry.toUpperCase()}
+//                                       </li>`;
+//       }
+//       return countryLetterHeaderElement +
+//         `<li>
+//           <a href="#" data-code="${c.code}" class="${countryLetterHeaderElement ? 'no-borders' : ''}">${c.name}</a>
+//         </li>`;
+//     });
 
-  // search a country
-  $('#country-search-bar').addEventListener('keyup', e => {
-    findCountry(e.target.value);
-  });
+//   // Display country collection on html page
+//   countrySelectionElement.innerHTML += frequentCountries.join('') +
+//     otherCountries.join('');
 
-  function findCountry (value) {
-    const ulCountriesClass = 'ul#countries li';
-    if (value) {
-      $$(ulCountriesClass).forEach(li => {
-        li.style.display = 'none';
-      });
-      $$(ulCountriesClass).forEach(li => {
-        const a = li.querySelector('a');
-        if (a && a.textContent &&
-          getNormalizedString(a.textContent.toLowerCase())
-            .indexOf(getNormalizedString(value.toLowerCase())) > -1) {
-          li.style.display = 'list-item';
-        }
-      });
-    } else {
-      $$(ulCountriesClass).forEach(li => { li.style.display = 'list-item'; });
-    }
-  }
+//   // search a country
+//   $('#country-search-bar').addEventListener('keyup', e => {
+//     findCountry(e.target.value);
+//   });
 
-  // Process country selection event
-  // 1- select country code and related document type
-  // 2- Display document type
-  countrySelectionElement.addEventListener('click', async e => {
-    const target = e.target;
-    const selectedCountryCode = target.getAttribute('data-code');
+//   function findCountry (value) {
+//     const ulCountriesClass = 'ul#countries li';
+//     if (value) {
+//       $$(ulCountriesClass).forEach(li => {
+//         li.style.display = 'none';
+//       });
+//       $$(ulCountriesClass).forEach(li => {
+//         const a = li.querySelector('a');
+//         if (a && a.textContent &&
+//           getNormalizedString(a.textContent.toLowerCase())
+//             .indexOf(getNormalizedString(value.toLowerCase())) > -1) {
+//           li.style.display = 'list-item';
+//         }
+//       });
+//     } else {
+//       $$(ulCountriesClass).forEach(li => { li.style.display = 'list-item'; });
+//     }
+//   }
 
-    const docTypesForSelectedCountry = supportedCountriesDoctypes.find(country => country.code === selectedCountryCode).docTypes;
+//   // Process country selection event
+//   // 1- select country code and related document type
+//   // 2- Display document type
+//   countrySelectionElement.addEventListener('click', async e => {
+//     // Country selection event
+//     const target = e.target;
+//     const selectedCountryCode = target.getAttribute('data-code');
 
-    // looking for accepted doc types for this country code
+//     const docTypesForSelectedCountry = supportedCountriesDoctypes.find(country => country.code === selectedCountryCode).docTypes;
 
-    console.log(`Accepted doc types for ${selectedCountryCode}: ${docTypesForSelectedCountry}`);
-    displayListOfDocumentTypes(selectedCountryCode, docTypesForSelectedCountry);
-  });
-})
-  .catch(function (error) {
-    const extendedMsg = 'No supported country or docserver is down';
-    displayCountryManagementError(extendedMsg, error);
-  }
+//     // looking for accepted doc types for this country code
 
-  );
+//     console.log(`Accepted doc types for ${selectedCountryCode}: ${docTypesForSelectedCountry}`);
+//     displayListOfDocumentTypes(selectedCountryCode, docTypesForSelectedCountry);
+//   });
+// })
+//   .catch(function (error) {
+//     const extendedMsg = 'No supported country or docserver is down';
+//     displayCountryManagementError(extendedMsg, error);
+//   }
+
+//   );
 
 /**
  * Handle suported country retrieval or processing error
@@ -364,7 +400,10 @@ function displayListOfDocumentTypes (selectedCountryCode, docTypesForSelectedCou
 
     $('#step-doctype-selection #selected-country').innerText = selectedCountryCode === 'XXX' ? '' : selectedCountryCode; // TODO: get country name instead of code?
     $('#step-country-selection').classList.add('d-none');
+    $('#step-start-tut').classList.add('d-none');
     $('#step-doctype-selection').classList.remove('d-none');
+    // handling header changes
+    handleHeaderChange(true)
   } else {
     const extendedMsg = 'No specified document types for this country ';
     console.log(extendedMsg, selectedCountryCode);
@@ -380,7 +419,8 @@ function displayListOfDocumentTypes (selectedCountryCode, docTypesForSelectedCou
  * @param format
  */
 function processDocType (selectedCountryCode, docRules, selectedDocType, format) {
-  let targetStepId, firstSideToScan;
+  let targetStepId, firstSideToScan, targetResultStep;
+
   $$('.step').forEach(row => row.classList.add('d-none'));
   // display document name
   $$('.document-name').forEach(txt => {
@@ -394,10 +434,7 @@ function processDocType (selectedCountryCode, docRules, selectedDocType, format)
     const isPassport = side === 'INSIDE_PAGE';
     const sideName = side.toLowerCase();
     const currentTargetStepId = isPassport ? '#step-scan-passport' : `#step-scan-doc-${sideName}`;
-    if (!targetStepId) { // get the first side to scandocType.toLowerCase
-      targetStepId = currentTargetStepId;
-      firstSideToScan = sideName;
-    }
+    
     $$(currentTargetStepId + `, #step-scan-doc-${sideName}-result, #step-scan-doc-${sideName}-error`)
       .forEach(step => {
         step.querySelectorAll('.doc-rule-value').forEach(dr => {
@@ -407,10 +444,16 @@ function processDocType (selectedCountryCode, docRules, selectedDocType, format)
           }
         });
       });
+
+      if (!targetStepId) { // get the first side to scandocType.toLowerCase
+        targetStepId = currentTargetStepId === '#step-scan-doc-front' ? '#step-place-doc-in-palm' : currentTargetStepId;
+        firstSideToScan = sideName;
+      }
+      targetResultStep = $(currentTargetStepId + '-result');
+
   });
   // chain the sides in UI
   const sidesNumber = Object.entries(selectedDocRule).length;
-  const targetResultStep = $(targetStepId + '-result');
   if (!selectedDocRule.find(rule => rule.side.name === DOC_TYPE.UNKNOWN)) { // TODO: temp ?
     const continueDemoClass = '.continue-demo';
     const restartDemoClass = '.restart-demo';
@@ -434,8 +477,23 @@ function processDocType (selectedCountryCode, docRules, selectedDocType, format)
   const selectedDocFormat = (!format || format === 'UNKNOWN') ? 'id2' : format.toLowerCase();
   $('body').className = `${selectedDocFormat} ${snakeCaseToKebabCase(selectedDocType)}`;
 
+  // handling header changes
+  handleHeaderChange(false)  
+
   // display the first side to scan
   $(targetStepId).classList.remove('d-none');
+}
+
+function handleHeaderChange(showGoBack) {
+  if(showGoBack) {
+    $(HEADER_GO_BACK_ID).classList.remove('d-none');
+    $(HEADER_LOGO_ID).classList.add('d-none'); 
+  } else {
+    $(HEADER_GO_BACK_ID).classList.add('d-none');
+    $(HEADER_LOGO_ID).classList.remove('d-none'); 
+    $(HEADER_INFO_SECURE_SECTION_ID).classList.add('d-none'); 
+    $(HEADER_STEPS_SECTION_ID).classList.remove('d-none'); 
+  }
 }
 
 exports.getCurrentDocumentRule = () => { return currentDocumentRule; };
@@ -594,6 +652,7 @@ const signalValueClass = '.signal-value';
 const signalMinValueClass = '.signal-min-value';
 const networkSpeedString = '/network-speed';
 const networkLatencyString = '/network-latency';
+const stepDocTypeSelectionId = 'step-doctype-selection'
 
 /**
  * 1- init doc auth session (from backend) // TODO TBD
@@ -667,12 +726,30 @@ $$('*[data-target]')
       sourceStepId, targetStepId,
       btn.hasAttribute('data-delay') && (btn.getAttribute('data-delay') || 2000),
       btn.getAttribute('data-doc-type'))
-      .catch(() => stopVideoCaptureAndProcessResult(false));
+      .catch((err) =>{ 
+      console.log('An Error Occured:', err);  
+        stopVideoCaptureAndProcessResult(false)
+      });
   }));
+
+  function handleHeader(sourceStepId, targetStepId) {
+    const HEADER_LOGO_ID = 'header-logo';
+    const HEADER_GO_ID = 'header-go-back';
+    if(targetStepId === stepDocTypeSelectionId) {
+      $(HEADER_GO_ID).classList.remove('d-none');
+      $(HEADER_LOGO_ID).classList.add('d-none'); 
+    }
+    if(sourceStepId === stepDocTypeSelectionId) {
+      $(HEADER_GO_ID).classList.add('d-none');
+      $(HEADER_LOGO_ID).classList.remove('d-none'); 
+    }
+  }
+
 
 async function processStep (sourceStepId, targetStepId, displayWithDelay, docSide) {
   // d-none all steps
   $$('.step').forEach(row => row.classList.add('d-none'));
+  handleHeader(sourceStepId, targetStepId);
   if (targetStepId === connectivityCheckId) {
     if (!connectivityOK) { // bypass this waiting time if we are still here 5 seconds
       document.querySelector(connectivityCheckId).classList.remove('d-none');
@@ -680,16 +757,17 @@ async function processStep (sourceStepId, targetStepId, displayWithDelay, docSid
         processStep(sourceStepId, targetStepId, displayWithDelay, docSide);
       }, 1000); // call this method until we got the results from the network connectivity
     } else {
+      cameraPermissionAlreadyAsked = true; 
       targetStepId = stepDocAuthId; // connectivity check done/failed, move to the next step
     }
   }
 
   if (targetStepId === stepDocAuthId) { // << if client clicks on start capture
     if (!cameraPermissionAlreadyAsked) { // << display the camera access permission step the first time only
-      cameraPermissionAlreadyAsked = true; // TODO: use localStorage ??
-      targetStepId = '#step-access-permission';
+      targetStepId = '#'+sourceStepId;
+      $('#permssion-modal').classList.remove('d-none');
       // when client accepts camera permission access > we redirect it to the document capture check
-      document.querySelector(targetStepId + ' button').setAttribute('data-doc-type', docSide);
+      document.querySelector('#camera-permission-allow').setAttribute('data-doc-type', docSide);
     } else {
       $(stepDocAuthId).classList.remove('d-none');
 
@@ -994,7 +1072,7 @@ function displayInstructionsToUser ({ position, corners, pending }) {
   }
 }
 
-window.envBrowserOk && $('#step-country-selection').classList.remove('d-none');
+window.envBrowserOk && $('#step-start-tut').classList.remove('d-none');
 /**
  * check user connectivity (latency, download speed, upload speed)
  */

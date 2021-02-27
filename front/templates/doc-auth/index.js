@@ -61,6 +61,7 @@ const signalValueClass = '.signal-value';
 const signalMinValueClass = '.signal-min-value';
 const networkSpeedString = '/network-speed';
 const networkLatencyString = '/network-latency';
+const stepDocTypeSelectionId = 'step-doctype-selection'
 
 /**
  * 1- init doc auth session (from backend) // TODO TBD
@@ -134,12 +135,30 @@ $$('*[data-target]')
       sourceStepId, targetStepId,
       btn.hasAttribute('data-delay') && (btn.getAttribute('data-delay') || 2000),
       btn.getAttribute('data-doc-type'))
-      .catch(() => stopVideoCaptureAndProcessResult(false));
+      .catch((err) =>{ 
+      console.log('An Error Occured:', err);  
+        stopVideoCaptureAndProcessResult(false)
+      });
   }));
+
+  function handleHeader(sourceStepId, targetStepId) {
+    const HEADER_LOGO_ID = 'header-logo';
+    const HEADER_GO_ID = 'header-go-back';
+    if(targetStepId === stepDocTypeSelectionId) {
+      $(HEADER_GO_ID).classList.remove('d-none');
+      $(HEADER_LOGO_ID).classList.add('d-none'); 
+    }
+    if(sourceStepId === stepDocTypeSelectionId) {
+      $(HEADER_GO_ID).classList.add('d-none');
+      $(HEADER_LOGO_ID).classList.remove('d-none'); 
+    }
+  }
+
 
 async function processStep (sourceStepId, targetStepId, displayWithDelay, docSide) {
   // d-none all steps
   $$('.step').forEach(row => row.classList.add('d-none'));
+  handleHeader(sourceStepId, targetStepId);
   if (targetStepId === connectivityCheckId) {
     if (!connectivityOK) { // bypass this waiting time if we are still here 5 seconds
       document.querySelector(connectivityCheckId).classList.remove('d-none');
@@ -147,16 +166,17 @@ async function processStep (sourceStepId, targetStepId, displayWithDelay, docSid
         processStep(sourceStepId, targetStepId, displayWithDelay, docSide);
       }, 1000); // call this method until we got the results from the network connectivity
     } else {
+      cameraPermissionAlreadyAsked = true; 
       targetStepId = stepDocAuthId; // connectivity check done/failed, move to the next step
     }
   }
 
   if (targetStepId === stepDocAuthId) { // << if client clicks on start capture
     if (!cameraPermissionAlreadyAsked) { // << display the camera access permission step the first time only
-      cameraPermissionAlreadyAsked = true; // TODO: use localStorage ??
-      targetStepId = '#step-access-permission';
+      targetStepId = '#'+sourceStepId;
+      $('#permssion-modal').classList.remove('d-none');
       // when client accepts camera permission access > we redirect it to the document capture check
-      document.querySelector(targetStepId + ' button').setAttribute('data-doc-type', docSide);
+      document.querySelector('#camera-permission-allow').setAttribute('data-doc-type', docSide);
     } else {
       $(stepDocAuthId).classList.remove('d-none');
 
@@ -461,7 +481,7 @@ function displayInstructionsToUser ({ position, corners, pending }) {
   }
 }
 
-window.envBrowserOk && $('#step-country-selection').classList.remove('d-none');
+window.envBrowserOk && $('#step-start-tut').classList.remove('d-none');
 /**
  * check user connectivity (latency, download speed, upload speed)
  */
