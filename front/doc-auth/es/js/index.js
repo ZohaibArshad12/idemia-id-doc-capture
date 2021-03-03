@@ -179,8 +179,8 @@ const COUNTRY_CODE = 'USA';
 // Doc types to show
 const DOC_TYPE_TO_SHOW = [
   "DRIVING_LICENSE",
-  "ID_CARD",
-  "RESIDENT_CARD",
+  // "ID_CARD",
+  // "RESIDENT_CARD",
   "PASSPORT"
 ]
 
@@ -435,7 +435,7 @@ function processDocType (selectedCountryCode, docRules, selectedDocType, format)
     const sideName = side.toLowerCase();
     const currentTargetStepId = isPassport ? '#step-scan-passport' : `#step-scan-doc-${sideName}`;
     
-    $$(currentTargetStepId + `, #step-scan-doc-${sideName}-result, #step-scan-doc-${sideName}-error`)
+    $$(currentTargetStepId + `, #step-scan-doc-result, #step-scan-doc-${sideName}-error`)
       .forEach(step => {
         step.querySelectorAll('.doc-rule-value').forEach(dr => {
           const rulesInText = getRulesInText(rules, '#' + step.id === currentTargetStepId); // FIXME bofff
@@ -449,7 +449,7 @@ function processDocType (selectedCountryCode, docRules, selectedDocType, format)
         targetStepId = currentTargetStepId === '#step-scan-doc-front' ? '#step-place-doc-in-palm' : currentTargetStepId;
         firstSideToScan = sideName;
       }
-      targetResultStep = $(currentTargetStepId + '-result');
+      targetResultStep = isPassport ? $(currentTargetStepId + '-result') : $('#step-scan-doc-result');
 
   });
   // chain the sides in UI
@@ -462,11 +462,15 @@ function processDocType (selectedCountryCode, docRules, selectedDocType, format)
       targetResultStep.querySelector(continueDemoClass).classList.add('d-none');
       targetResultStep.querySelector(restartDemoClass).classList.remove('d-none');
     } else { // we suppose we have two sides only (front & back) to scan
-      const nextResultSideStep = firstSideToScan === 'front' ? $('#step-scan-doc-back-result') : $('#step-scan-doc-front-result');
+      
       targetResultStep.querySelector(continueDemoClass).classList.remove('d-none'); // add possibility to scan back side once front is done
-      targetResultStep.querySelector(restartDemoClass).classList.add('d-none');
-      nextResultSideStep.querySelector(continueDemoClass).classList.add('d-none'); // we stop demo once last side is done
-      nextResultSideStep.querySelector(restartDemoClass).classList.remove('d-none');
+      // targetResultStep.querySelector(restartDemoClass).classList.add('d-none');
+      
+      // ToDo need to look into this
+
+      // const nextResultSideStep = firstSideToScan === 'front' ? $('#step-scan-doc-back-result') : $('#step-scan-doc-front-result');
+      // nextResultSideStep.querySelector(continueDemoClass).classList.add('d-none'); // we stop demo once last side is done
+      // nextResultSideStep.querySelector(restartDemoClass).classList.remove('d-none');
     }
   }
 
@@ -654,6 +658,23 @@ const networkSpeedString = '/network-speed';
 const networkLatencyString = '/network-latency';
 const stepDocTypeSelectionId = 'step-doctype-selection'
 
+const examplePhoto = '#examplePhoto'
+const showExamplePhoto = '#showExamplePhoto'
+const hideExamplePhoto = '#hideExamplePhoto'
+
+$(showExamplePhoto).addEventListener('click', async e => {
+    $(examplePhoto).classList.remove('d-none');
+    $(hideExamplePhoto).classList.remove('d-none');
+    $(showExamplePhoto).classList.add('d-none');
+  });
+
+$(hideExamplePhoto).addEventListener('click', async e => {
+  $(showExamplePhoto).classList.remove('d-none');
+  $(examplePhoto).classList.add('d-none');
+  $(hideExamplePhoto).classList.add('d-none');
+})
+
+
 /**
  * 1- init doc auth session (from backend) // TODO TBD
  * 2- init the communication with the server via socket
@@ -694,7 +715,7 @@ async function init (options = {}) {
       const sessionId = getCurrentDocumentRule().currentSession;
       const docCaptureResult = await getDocCaptureResult(sessionId, getCurrentDocumentRule().selectedDocType, docSide)
         .catch(() => stopVideoCaptureAndProcessResult(false, "No se pudieron recuperar los resultados de la captura"));
-      if (docCaptureResult) {
+        if (docCaptureResult) {
         stopVideoCaptureAndProcessResult(docCaptureResult);
       }
       if (client) {
@@ -707,7 +728,7 @@ async function init (options = {}) {
     errorFn: (error) => {
       console.log('got error', error);
       captureInProgress = false;
-      stopVideoCaptureAndProcessResult(false, "Lo siento, hubo un problema.");
+      stopVideoCaptureAndProcessResult(false, 'Uh oh! There was an issue capturing your image.');
       if (client) {
         client.disconnect();
       }
@@ -814,7 +835,7 @@ async function stopVideoCaptureAndProcessResult (result, msg, extendedMsg) {
     .find(r => r.side.name === docSide).captureFeatures.includes('NONE');
   $$('.step').forEach(step => step.classList.add('d-none'));
   if (result) {
-    const stepId = isPassport ? '#step-scan-passport-result' : `#step-scan-doc-${docSide.toLowerCase()}-result`;
+    const stepId = isPassport ? '#step-scan-passport-result' : (docSide.toLowerCase() ==='front' || docSide.toLowerCase() ==='back') ? `#step-scan-doc-result` : `#step-scan-doc-${docSide.toLowerCase()}-result`;
     const stepResult = $(stepId + ' .formatted-results');
     stepResult.innerHTML = '';
     const { timeout, ocr, pdf417, diagnostic, docImage, docCorners } = result;
@@ -824,6 +845,9 @@ async function stopVideoCaptureAndProcessResult (result, msg, extendedMsg) {
     const ocrFound = ocrCase(ocr, stepResult);
     if (ocrFound) {
       $(stepId).classList.remove('d-none');
+    }
+    if(ocrFound || pdf417) {
+      displayResults()
     }
     docImageCase(docImage, stepResult, docCorners);
 
@@ -839,6 +863,11 @@ async function stopVideoCaptureAndProcessResult (result, msg, extendedMsg) {
         if (isPassport) {
           $('#step-scan-passport-error').classList.remove('d-none');
         } else {
+          if(result.diagnostic) {
+            displayErrors(result.diagnostic)  
+          } else {
+            displayErrors({blur: true})  
+          }
           $(`#step-scan-doc-${docSide.toLowerCase()}-error`).classList.remove('d-none');
         }
       }
@@ -850,6 +879,104 @@ async function stopVideoCaptureAndProcessResult (result, msg, extendedMsg) {
     }
     const small = $('#step-doc-auth-ko small');
     small.textContent = extendedMsg || '';
+  }
+}
+
+
+function displayErrors(diagnostic) {
+  const errorItems = Object.keys(diagnostic).filter((item) => {
+    return item;
+  });
+
+  // clearing previous results if any
+  $(`#doc-error-list-${docSide.toLowerCase()}`).textContent = '' 
+
+  errorItems.forEach((item) => {
+    var node = document.createElement('div'); // Create a <li> node
+    node.className = 'result-item';
+    var imgNode = document.createElement('img');
+    imgNode.src = './img/error-cross.svg';
+    imgNode.alt = '.';
+    var textnode = document.createElement('small'); // Create a text node
+
+    let errorText = '';
+
+    switch (item) {
+      case 'blur':
+        errorText = 'ID isn’t in focus';
+        break;
+      case 'holdStraight':
+        errorText = 'ID is angled';
+        break;
+      case 'lowlight':
+        errorText = 'Bad lighting';
+        break;
+      case 'tooFar':
+        errorText = 'ID too far from camera';
+        break;
+      case 'tooClose':
+        errorText = 'ID too close to camera';
+        break;
+      case 'badFraming':
+        errorText = 'ID corner(s) are clipped';
+        break;
+      default:
+        if (item.includes('light')) {
+          errorText = 'ID is angled';
+        } else if (item.includes('corner')) {
+          errorText = 'ID corner(s) are clipped';
+        } else if (item.includes('shadow') || item.includes('glare')) {
+          errorText = 'Glare and shadows visible';
+        }
+    }
+    textnode.innerText = errorText;
+    node.appendChild(imgNode);
+    node.appendChild(textnode);
+
+    $(`#doc-error-list-${docSide.toLowerCase()}`).appendChild(node);
+  
+  });
+}
+
+function displayResults() {
+  
+  // clearing previous results if any
+  // ToDo : Need to make it better ( make single html section for result)
+  const resultSection = $('#doc-result-list');
+  resultSection.textContent = '';
+
+  const resultItems = ['No glare/shadows', 'ID is in focus', 'All corners are visible', 'Good lighting', 'Good distance', 'ID is straight']
+  resultItems.forEach((item) => {
+    var node = document.createElement('div'); // Create a <li> node
+    node.className = 'result-item';
+    var imgNode = document.createElement('img');
+    imgNode.src = './img/green-tick-small.svg';
+    imgNode.alt = '.';
+    var textnode = document.createElement('small'); // Create a text node
+
+    textnode.innerText = item;
+    node.appendChild(imgNode);
+    node.appendChild(textnode);
+
+    resultSection.appendChild(node)
+  
+  });
+
+const examplePhotoElmnt = $(examplePhoto)
+
+  const continueDemoBtnId = '#continue-demo-btn';
+  const rescanBtnId = 'rescan-btn';
+
+  if(docSide.toLowerCase() === 'front') {
+    examplePhotoElmnt.src = './img/doc-check-front-doc-sample.gif';
+    $(continueDemoBtnId).setAttribute('data-target', "#step-scan-doc-back");
+    // $(rescanBtnId).setAttribute('data-doc-type', "FRONT");
+
+  } else if(docSide.toLowerCase() === 'back') {
+    examplePhotoElmnt.src = './img/doc-check-back-doc-sample.gif';
+    // For now moving to start of tutorial on back side continue
+    $(continueDemoBtnId).setAttribute('data-target', "#step-start-tut");
+    // $(rescanBtnId).setAttribute('data-doc-type', "BACK");
   }
 }
 
@@ -929,11 +1056,9 @@ function docImageCase (docImage, stepResult, docCorners) {
     console.log('docCorners:::  ',docCorners);
     const imgLabel = document.createElement('div');
     imgLabel.className = 'result-header';
-    imgLabel.innerText = 'Extracted image1 :  '+docImage;
+    imgLabel.innerText = 'Your photo';
     const img = document.createElement('img');
-    alert(`Alertttt: ${docImage}`)
 
-;
     // const imgLabel = document.createElement('div');
     // imgLabel.className = 'result-header';
     // imgLabel.innerText = 'Extracted image :';
@@ -1230,6 +1355,8 @@ initDocAuthAnimations();
  * @param {boolean} rawData if true it will be displayed as link instead of text
  */
 function appendResultsTo (parent, title = '', text = '', rawData) {
+  // Not using reults text for now
+  return
   const resultBlock = document.createElement('div');
   resultBlock.className = 'result-block';
   const resultHeader = document.createElement('div');

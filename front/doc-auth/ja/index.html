@@ -35,13 +35,38 @@ limitations under the License.
 </head>
 <body>
     <main class="container-fluid animation-tut">
+
+          <!-- header -->
+
+          <header class="row header">
+
+            <div class="col-4 go-back d-none" id="header-go-back">
+                <button class="btn btn-secondary btn-block" id="go-back-from-doc-type" data-delay>GO BACK</button>
+            </div>
+            <div class="col-4 logo" id="header-logo" >
+                <img alt="Logo IDEMIA" src="./img/idv-logo.svg">
+            </div>
+            <div class="col-8 info" id="header-info-secure-section">
+                <img alt="Logo IDEMIA" src="./img/lock-small.svg">
+                <span  >あなたの情報は安全です.</span>
+            </div>
+            <div class="col-8 steps d-none" id="header-steps-section">
+                <div class="header-step-completed" id='header-step1' >
+                    <img alt="step done" src="./img/green-tick.svg">
+                </div>
+                <span class="header-hr"></span>
+                <div class="header-step active-step" id='header-step2'>
+                    <span>2</span>
+                </div>
+                <span class="header-hr"></span>
+                <div class="header-step" id='header-step3' class="d-none">
+                    <span>3</span>
+                </div>
+            </div>
+        </header>
+
 <!-- Browser compatibility Check-->
         <div id="step-compatibility" class="row step d-none">
-            <header class="row header">
-                <div class="col logo">
-                    <img alt="Logo IDEMIA" src="./img/logo.png">
-                </div>
-            </header>
             <div class="col-12 description">
                 サポートされていないブラウザを使用しているようです。
             </div>
@@ -72,11 +97,7 @@ limitations under the License.
         </div>
         <!-- Browser connectivity Check-->
         <div id="step-weak-network" class="row step d-none">
-            <header class="row header">
-                <div class="col logo">
-                    <img alt="Logo IDEMIA" src="./img/logo.png">
-                </div>
-            </header>
+            
             <div class="col-12 animation">
                 <div class="loader-animation"><div></div></div>
                 <span class="description text-center">ネットワーク信号の確認</span>
@@ -102,22 +123,14 @@ limitations under the License.
         </div>
         <!--displayed just before the livess start if no response from connectivity check-->
         <div id="connectivity-check" class="row step d-none">
-            <header class="row header">
-                <div class="col logo">
-                    <img alt="Logo IDEMIA" src="./img/logo.png">
-                </div>
-            </header>
+        
             <div class="col-12 animation">
                 <div class="loader-animation"><div></div></div>
                 <span class="description text-center">ネットワーク信号の確認</span>
             </div>
         </div>
         <div id="step-good-network" class="row step d-none">
-            <header class="row header">
-                <div class="col logo">
-                    <img alt="Logo IDEMIA" src="./img/logo.png">
-                </div>
-            </header>
+         
             <div class="check-phone">
                 <div class="">
                     <img class="contain-gif" width="100" src="./img/wifi-medium.png" alt="Good network signal">
@@ -135,34 +148,6 @@ limitations under the License.
             </div>
         </div>
 
-        <!-- header -->
-
-        <header class="row header">
-
-            <div class="col-4 go-back d-none" id="header-go-back">
-                <button class="btn btn-secondary btn-block" id="go-back-from-doc-type" data-delay>GO BACK</button>
-            </div>
-            <div class="col-4 logo" id="header-logo" >
-                <img alt="Logo IDEMIA" src="./img/idv-logo.svg">
-            </div>
-            <div class="col-8 info" id="header-info-secure-section">
-                <img alt="Logo IDEMIA" src="./img/lock-small.svg">
-                <span  >あなたの情報は安全です.</span>
-            </div>
-            <div class="col-8 steps d-none" id="header-steps-section">
-                <div class="header-step-completed" id='header-step1' >
-                    <img alt="step done" src="./img/green-tick.svg">
-                </div>
-                <span class="header-hr"></span>
-                <div class="header-step active-step" id='header-step2'>
-                    <span>2</span>
-                </div>
-                <span class="header-hr"></span>
-                <div class="header-step" id='header-step3' class="d-none">
-                    <span>3</span>
-                </div>
-            </div>
-        </header>
         <div id="permssion-modal" class="d-none step permission-modal-step" >
         <div class="m-backdrop" ></div>
         <div class="m-modal" id="camera-permission-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -201,11 +186,7 @@ limitations under the License.
         </div>
 <!-- Country & doc type selection -->
         <div id="step-country-selection" class="row step d-none">
-            <header class="row header">
-                <div class="col logo">
-                    <img alt="Logo IDEMIA" src="./img/logo.png">
-                </div>
-            </header>
+         
             <div class="col-12 description">
                 <span>IDはどこの国からですか？</span>
             </div>
@@ -230,13 +211,29 @@ limitations under the License.
             </div>
             <div class="col-12 animation flex-column justify-content-start"></div>
         </div>
+
+        <div id="step-place-doc-in-palm" class="row step d-none">
+            <div class="col-12 description">
+                <span>Place your <span class="document-name"></span> in the palm of your hand.</span>
+                <small>
+                    Make sure you’re in a well-lit space and that there’s no glare on the ID.
+                </small>
+            </div>
+            <div class="col-12 animation">
+                <div class="doc-scan-front-doc contain"></div>
+                <div class="col-12 footer">
+                    <div class="row">
+                        <div class="col">
+                            <button class="btn btn-primary btn-block"
+                                    data-target="#step-scan-doc-front" data-doc-type="FRONT" >継続する</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>        
 <!-- GENERIC DOC -->
         <div id="step-scan-doc-unknown" class="row step d-none">
-            <header class="row header">
-                <div class="col logo">
-                    <img alt="Logo IDEMIA" src="./img/logo.png">
-                </div>
-            </header>
+       
             <div class="col-12 description">
                 <span>ドキュメントをスキャンします。</span>
                 <small>IDがフレームの中央に配置されていることを確認してください。デバイスのカメラが汚れている場合は、掃除してください。</small>
@@ -254,11 +251,7 @@ limitations under the License.
             </div>
         </div>
         <div id="step-scan-doc-unknown-result" class="row step d-none">
-            <header class="row header">
-                <div class="col logo">
-                    <img alt="Logo IDEMIA" src="./img/logo.png">
-                </div>
-            </header>
+          
             <div class="col-12 description">
                 <span>ドキュメントから情報を抽出しました。</span>
                 <small>何かが間違っている場合は、ドキュメントの写真を撮り直してください。</small>
@@ -296,11 +289,7 @@ limitations under the License.
             </div>
         </div>
         <div id="step-scan-doc-unknown-error" class="row step d-none">
-            <header class="row header">
-                <div class="col logo">
-                    <img alt="Logo IDEMIA" src="./img/logo.png">
-                </div>
-            </header>
+        
             <div class="col-12 description">
                 <span>ドキュメントをキャプチャするのにいくつかの問題がありました。すべてのコーナーが表示されていることを確認してください。</span>
                 <small class="pc-text-left text-center pt-5">写真の例</small>
@@ -319,13 +308,9 @@ limitations under the License.
         </div>
 <!-- BACK SIDE -->
         <div id="step-scan-doc-back" class="row step d-none">
-            <header class="row header">
-                <div class="col logo">
-                    <img alt="Logo IDEMIA" src="./img/logo.png">
-                </div>
-            </header>
+           
             <div class="col-12 description">
-                <span>あなたの背中をスキャンします <span class="document-name"></span>.</span>
+                <span>Take a photo of the back of your <span class="document-name"></span>.</span>
                 <small>
                     IDがフレームの中央に配置されていることを確認してください
                     <span class="doc-rule"> そしてそれ <span class="doc-rule-value"></span> はっきりと見える。</span> <br>
@@ -344,82 +329,36 @@ limitations under the License.
                 </div>
             </div>
         </div>
-        <div id="step-scan-doc-back-result" class="row step d-none">
-            <header class="row header">
-                <div class="col logo">
-                    <img alt="Logo IDEMIA" src="./img/logo.png">
-                </div>
-            </header>
-            <div class="col-12 description">
-                <span>から情報を抽出しました
-                    <span class="doc-rule">
-                        インクルード <span class="doc-rule-value"> オン </span>
-                    </span>
-                    君の <span class="document-name"></span>.
-                </span>
-                <small>何か間違っている場合は、IDの裏側の写真を撮り直してください。</small>
-            </div>
-            <div class="col-12 animation justify-content-start">
-                <div class="formatted-results"></div>
-                <div class="col-12 footer">
-                    <div class="row">
-                        <div class="col-12">
-                            <button class="d-none btn btn-primary btn-block restart-demo" data-target="#step-start-tut" data-delay>デモを再開する</button>
-                            <button class="d-none btn btn-primary btn-block continue-demo" data-target="#step-scan-doc-front" data-delay>よさそうだ、続ける</button>
-                        </div>
-                        <div class="col-12 pt-3">
-                            <button class="btn btn-outline-primary btn-block"
-                                    data-doc-type="BACK" data-target="#step-doc-auth">正しくありません、ドキュメントを再スキャンしてください</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
         <div id="step-scan-doc-back-error" class="row step d-none">
-            <header class="row header">
-                <div class="col logo">
-                    <img alt="Logo IDEMIA" src="./img/logo.png">
-                </div>
-            </header>
+         
             <div class="col-12 description">
-                <span>ドキュメントをキャプチャするのにいくつかの問題がありました。以下の例のように、すべてのコーナーが表示されていることを確認してください</span>
-                <small class="pc-text-left text-center pt-5">Example photo</small>
+                <span>Oops!</span>
+                <small class="pc-text-left pt-1">There are a few issues with the photo.</small>
+                <small class="determined-text" >How we determined this</small>
+                <div id="doc-error-list-back">
+                </div>
+                <small class="pc-text-left text-center pt-5">写真の例</small>
             </div>
             <div class="col-12 animation">
                 <img class="contain-gif" src="./img/doc-check-back-doc-sample.gif" alt="Computer flat on a table">
                 <div class="col-12 footer">
                     <div class="row">
-                        <div class="col">
-                            <button class="btn btn-primary btn-block"
+                        <div class="col-6">
+                            <button class=" btn btn-outline-primary btn-block restart-demo" data-target="#step-start-tut" data-delay>QUIT</button>                            
+                        </div>
+                        <div class="col-6">
+                            <button class=" btn btn-primary btn-block "
                                     data-doc-type="BACK" data-target="#step-doc-auth">再試行してください</button>
-                        </div>
+                                </div>
                     </div>
                 </div>
             </div>
         </div>
+
 <!-- FRONT SIDE -->
-        <div id="step-place-doc-in-palm" class="row step d-none">
-            <div class="col-12 description">
-                <span>Place your <span class="document-name"></span> in the palm of your hand.</span>
-                <small>
-                    Make sure you’re in a well-lit space and that there’s no glare on the ID.
-                </small>
-            </div>
-            <div class="col-12 animation">
-                <div class="doc-scan-front-doc contain"></div>
-                <div class="col-12 footer">
-                    <div class="row">
-                        <div class="col">
-                            <button class="btn btn-primary btn-block"
-                                    data-target="#step-scan-doc-front" data-doc-type="FRONT" >継続する</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
         <div id="step-scan-doc-front" class="row step d-none">
             <div class="col-12 description">
-                <span>あなたの正面をスキャンします <span class="document-name"></span>.</span>
+                <span>Take a photo of the front of your <span class="document-name"></span>.</span>
                 <small>
                     IDがフレームの中央に配置されていることを確認してください
                     <span class="doc-rule"> そしてそれ <span class="doc-rule-value"></span> はっきりと見える。</span> <br>
@@ -438,61 +377,76 @@ limitations under the License.
                 </div>
             </div>
         </div>
-        <div id="step-scan-doc-front-result" class="row step d-none">
-            <header class="row header">
-                <div class="col logo">
-                    <img alt="Logo IDEMIA" src="./img/logo.png">
-                </div>
-            </header>
-            <div class="col-12 description">
-                <span>私たちはあなたの正面から情報を抽出しました <span class="document-name"></span>.</span>
-                <small>何か間違っている場合は、IDの写真を撮り直してください。</small>
-            </div>
-            <div class="col-12 animation">
-                <div class="formatted-results justify-content-start"><!-- results here --></div>
-                <div class="col-12 footer">
-                    <div class="row">
-                        <div class="col-12">
-                            <button class="d-none btn btn-primary btn-block restart-demo" data-target="#step-start-tut" data-delay>デモを再開する</button>
-                            <button class="d-none btn btn-primary btn-block continue-demo" data-target="#step-scan-doc-back" data-delay>よさそうだ、続ける</button>
-                        </div>
-                        <div class="col-12 pt-3">
-                            <button class="btn btn-outline-primary btn-block"
-                                    data-doc-type="FRONT" data-target="#step-doc-auth">正しくありません、ドキュメントを再スキャンしてください</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+     
         <div id="step-scan-doc-front-error" class="row step d-none">
-            <header class="row header">
-                <div class="col logo">
-                    <img alt="Logo IDEMIA" src="./img/logo.png">
-                </div>
-            </header>
+             
             <div class="col-12 description">
-                <span>ドキュメントをキャプチャするのにいくつかの問題がありました。以下の例のように、すべてのコーナーが表示されていることを確認してください</span>
+                <span>Oops!</span>
+                <small class="pc-text-left pt-1">There are a few issues with the photo.</small>
+                <small class="determined-text" >How we determined this</small>
+                <div id="doc-error-list-front">
+                </div>
                 <small class="pc-text-left text-center pt-5">写真の例</small>
             </div>
             <div class="col-12 animation">
                 <img class="contain-gif" src="./img/doc-check-front-doc-sample.gif" alt="Check ID">
                 <div class="col-12 footer">
                     <div class="row">
-                        <div class="col">
-                            <button class="btn btn-primary btn-block"
-                                    data-doc-type="FRONT" data-target="#step-doc-auth">再試行してください</button>
+                        <div class="col-6">
+                            <button class=" btn btn-outline-primary btn-block restart-demo" data-target="#step-start-tut" data-delay>QUIT</button>                            
                         </div>
+                        <div class="col-6">
+                            <button class=" btn btn-primary btn-block "
+                                    data-doc-type="FRONT" data-target="#step-doc-auth">再試行してください</button>
+                                </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- RESULT SECTION -->
+
+        <div id="step-scan-doc-result" class="row step d-none">
+       
+            <div class="col-12 description">
+                <span>Good job!</span>
+                <small class="pc-text-left pt-1">The photo looks pretty good.</small>
+                <small class="determined-text" >How we determined this</small>
+                <div id="doc-result-list">
+                </div>
+            </div>
+            <div class="col-12 animation a-modified">
+                <div class="formatted-results justify-content-start"></div>
+
+                <div class="col-12">
+                    <button class="btn btn-outline-primary btn-block" id="showExamplePhoto" >Show Sample Photo</button>
+                    <button class="btn btn-outline-primary btn-block d-none" id="hideExamplePhoto" >Hide Sample Photo</button>
+                </div>
+                <div class="contain-gif-cont" >
+                    <img class="contain-gif d-none" id="examplePhoto" src="./img/doc-check-front-doc-sample.gif" alt="Check ID">
+                </div>
+                
+
+                <div class="col-12 footer">
+                    <div class="row">
+                        <div class="col-6">
+                            <button class=" btn btn-outline-primary btn-block restart-demo" data-target="#step-start-tut" data-delay>QUIT</button>                            
+                        </div>
+                        <div class="col-6">
+                            <button class=" btn btn-primary btn-block continue-demo" id="continue-demo-btn" data-target="" data-delay>CONTINUE</button>
+                        </div>
+                        <!-- <div class="col-12 pt-3">
+                            <button class="btn btn-outline-primary btn-block"
+                            id="rescan-btn" data-target="#step-doc-auth">正しくありません、ドキュメントを再スキャンしてください</button>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
 <!-- PASSPORT INSIDE PAGE -->
         <div id="step-scan-passport" class="row step d-none">
-            <header class="row header">
-                <div class="col logo">
-                    <img alt="Logo IDEMIA" src="./img/logo.png">
-                </div>
-            </header>
+      
             <div class="col-12 description">
                 <span>パスポートの内側のページをスキャンします。</span>
                 <small>
@@ -512,11 +466,7 @@ limitations under the License.
             </div>
         </div>
         <div id="step-scan-passport-result" class="row step d-none">
-            <header class="row header">
-                <div class="col logo">
-                    <img alt="Logo IDEMIA" src="./img/logo.png">
-                </div>
-            </header>
+      
             <div class="col-12 description">
                 <span>パスポートの内側のページから情報を抽出しました。</span>
                 <small>何かが間違っている場合は、ドキュメントを再スキャンしてください。</small>
@@ -538,11 +488,7 @@ limitations under the License.
             </div>
         </div>
         <div id="step-scan-passport-error" class="row step d-none">
-            <header class="row header">
-                <div class="col logo">
-                    <img alt="Logo IDEMIA" src="./img/logo.png">
-                </div>
-            </header>
+          
             <div class="col-12 description">
                 <span>ドキュメントをキャプチャするのにいくつかの問題がありました。以下の例のように、すべてのコーナーが表示されていることを確認してください</span>
                 <small class="pc-text-left text-center pt-5">写真の例</small>
@@ -628,17 +574,19 @@ limitations under the License.
 <!-- Technical issue -->
         <div id="step-doc-auth-ko" class="row step d-none results">
             <div class="col-12 animation">
-                <img src="./img/failure.svg" alt="failure">
-                <span class="description text-center">申し訳ありませんが、問題が発生しました。</span>
-                <span class="description"><small class="text-center"></small></span>
-                <button class="btn btn-primary reset-animations" data-target="#step-start-tut">デモを再開する</button>
+                <img src="./img/icons-product-no-large.svg" alt="failure">
+                <span class="description text-center">Uh oh! There was an issue capturing your image.</span>
+                <span class="description with-normal-font"><small class="text-center"></small>Your image was not captured.</span>
+                <button class="btn btn-primary reset-animations w-100" data-target="#step-start-tut">QUIT</button>
             </div>
         </div>
         <div id="step-doc-auth-tehnical-ko" class="row step d-none results">
             <div class="col-12 animation">
-                <img src="./img/failure.svg" alt="failure">
-                <span class="description text-center">申し訳ありませんが、問題が発生しました。</span>
+                <img src="./img/icons-product-no-large.svg" alt="failure">
+                <span class="description text-center">Uh oh! There was an issue capturing your image.</span>
+                <span class="description"><small class="text-center">Your image was not captured.</small></span>
                 <span class="description"><small class="text-center"></small></span>
+                <button class="btn btn-primary reset-animations w-100" data-target="#step-start-tut">QUIT</button>
             </div>
         </div>
     </main>

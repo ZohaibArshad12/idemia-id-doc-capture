@@ -217,6 +217,7 @@ background-color: #9b9b9b;
     text-transform: none;
     margin-left: 4px;
     flex: 1;
+    background-color: transparent;
 }
 
 #camera-permission-not-allow {
@@ -916,7 +917,7 @@ video {background-color: black}
 }
 .formatted-results .result-header {
     font-weight: bold;
-    font-size: 12px;
+    font-size: 18px;
     font-stretch: normal;
     font-style: normal;
     line-height: 1.5;
@@ -940,4 +941,49 @@ video {background-color: black}
 }
 .pc .formatted-results .result-value-scroll {
     overflow-x: visible;
+}
+
+.result-item {
+    display: flex;
+    align-items: center;
+    margin-top: 4px;
+}
+
+.result-item small {
+    margin-top: 0 !important;
+    margin-left: 6px;
+}
+
+.determined-text {
+    color: #430099 !important;
+    margin-bottom: 6 !important;
+}
+
+
+.step .a-modified {
+    flex: auto;
+    flex-grow: 1;
+    flex-direction: column;
+}
+
+.a-modified .formatted-results {
+    width: 100%;
+    padding-bottom: 0;
+}
+.a-modified .formatted-results .best-image-wrapper .img{
+    flex: auto;
+}
+
+.step .a-modified .contain-gif-cont{
+    padding-bottom: 100px;
+}
+.step .a-modified .contain-gif{
+    height: auto;
+    padding-bottom: 20px;
+    margin-top: 20px;
+}
+
+.with-normal-font {
+    font-weight: normal !important;
+    padding-top: 0 !important;
 }

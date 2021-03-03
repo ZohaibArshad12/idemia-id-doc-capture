@@ -29,8 +29,8 @@ const COUNTRY_CODE = 'USA';
 // Doc types to show
 const DOC_TYPE_TO_SHOW = [
   "DRIVING_LICENSE",
-  "ID_CARD",
-  "RESIDENT_CARD",
+  // "ID_CARD",
+  // "RESIDENT_CARD",
   "PASSPORT"
 ]
 
@@ -285,7 +285,7 @@ function processDocType (selectedCountryCode, docRules, selectedDocType, format)
     const sideName = side.toLowerCase();
     const currentTargetStepId = isPassport ? '#step-scan-passport' : `#step-scan-doc-${sideName}`;
     
-    $$(currentTargetStepId + `, #step-scan-doc-${sideName}-result, #step-scan-doc-${sideName}-error`)
+    $$(currentTargetStepId + `, #step-scan-doc-result, #step-scan-doc-${sideName}-error`)
       .forEach(step => {
         step.querySelectorAll('.doc-rule-value').forEach(dr => {
           const rulesInText = getRulesInText(rules, '#' + step.id === currentTargetStepId); // FIXME bofff
@@ -299,7 +299,7 @@ function processDocType (selectedCountryCode, docRules, selectedDocType, format)
         targetStepId = currentTargetStepId === '#step-scan-doc-front' ? '#step-place-doc-in-palm' : currentTargetStepId;
         firstSideToScan = sideName;
       }
-      targetResultStep = $(currentTargetStepId + '-result');
+      targetResultStep = isPassport ? $(currentTargetStepId + '-result') : $('#step-scan-doc-result');
 
   });
   // chain the sides in UI
@@ -312,11 +312,15 @@ function processDocType (selectedCountryCode, docRules, selectedDocType, format)
       targetResultStep.querySelector(continueDemoClass).classList.add('d-none');
       targetResultStep.querySelector(restartDemoClass).classList.remove('d-none');
     } else { // we suppose we have two sides only (front & back) to scan
-      const nextResultSideStep = firstSideToScan === 'front' ? $('#step-scan-doc-back-result') : $('#step-scan-doc-front-result');
+      
       targetResultStep.querySelector(continueDemoClass).classList.remove('d-none'); // add possibility to scan back side once front is done
-      targetResultStep.querySelector(restartDemoClass).classList.add('d-none');
-      nextResultSideStep.querySelector(continueDemoClass).classList.add('d-none'); // we stop demo once last side is done
-      nextResultSideStep.querySelector(restartDemoClass).classList.remove('d-none');
+      // targetResultStep.querySelector(restartDemoClass).classList.add('d-none');
+      
+      // ToDo need to look into this
+
+      // const nextResultSideStep = firstSideToScan === 'front' ? $('#step-scan-doc-back-result') : $('#step-scan-doc-front-result');
+      // nextResultSideStep.querySelector(continueDemoClass).classList.add('d-none'); // we stop demo once last side is done
+      // nextResultSideStep.querySelector(restartDemoClass).classList.remove('d-none');
     }
   }
 
